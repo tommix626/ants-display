@@ -49,7 +49,7 @@ class Ant:
                     adjacent.append((new_x, new_y))
         return adjacent
 
-    def calculate_probabilities(self, cells, smoothing_factor=0.01):
+    def calculate_probabilities(self, cells, smoothing_factor=0.05):
         """Calculate the probabilities for each cell based on pheromone levels with smoothing."""
         pheromone_levels = [self.canvas.get_pheromone_level(*cell) for cell in cells]
 
@@ -81,7 +81,7 @@ class Ant:
             # # TEST:peripheral deposit a little (guass bluring)
             # adjacent_cells = self.get_adjacent_cells()
             # for pos in adjacent_cells:
-            #     self.canvas.update_pheromone_level(*pos, deposit_amount // 10)
+            #     self.canvas.update_pheromone_level(*pos, deposit_amount // 5)
         self.canvas.update_pheromone_level(self.x, self.y, deposit_amount)
 
 
