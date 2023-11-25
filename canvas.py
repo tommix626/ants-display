@@ -1,4 +1,6 @@
 from sparse_grid import SparseGrid
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Canvas:
     def __init__(self, width, height):
@@ -29,5 +31,22 @@ class Canvas:
         return self.grid.get_cell(x, y)
 
     def draw_canvas(self):
-        # Visualization logic
-        pass
+        # Convert the sparse grid to a dense format for plotting
+        dense_grid = self.grid.grid.toarray()
+
+        # Create a plot
+        plt.figure(figsize=(10, 10))
+        plt.imshow(dense_grid, cmap='hot', interpolation='nearest')
+
+        # Optionally, mark the food sources
+        for x in range(self.width):
+            for y in range(self.height):
+                if dense_grid[x, y] == 1:  # Assuming 1 indicates a food source
+                    plt.scatter(y, x, c='blue', s=10)  # Mark with blue dot
+
+        plt.colorbar()  # Show pheromone intensity scale
+        plt.title("Ant Colony Canvas")
+        plt.xlabel("X-axis")
+        plt.ylabel("Y-axis")
+        plt.gca().invert_yaxis()  # Invert Y-axis to match grid orientation
+        plt.show()
