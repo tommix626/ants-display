@@ -3,7 +3,7 @@ from datetime import datetime
 import time
 from ant import Ant
 from canvas import Canvas
-# from image_processor import ImageProcessor  # Uncomment and implement as needed
+from image_processor import ImageProcessor
 
 def get_dots_for_830(scale=4, spacing=2):
     # Adjust scale and spacing to fit the grid size and visual preferences
@@ -55,10 +55,20 @@ def get_dots_for_830(scale=4, spacing=2):
 
 
 def main():
-    width, height = 30, 100  # Set the size of your canvas
-    num_ants = 50  # Number of ants
+    """core param"""
+    width, height = 40, 100  # Set the size of your canvas
+    num_ants = 200  # Number of ants
+    ant_memory_size = 50
+    ph_deposit, ph_multiplier = 1, 50
+    active_mode_duration = 500
+
+    """main"""
+    last_updated_time = None
+
     canvas = Canvas(width, height)
-    ants = [Ant(random.randint(0, width - 1), random.randint(0, height - 1), canvas) for _ in range(num_ants)]
+    ants = [Ant(random.randint(0, width - 1), random.randint(0, height - 1), canvas,
+                memory_size=ant_memory_size, pheromone_deposit=ph_deposit, active_pheromone_multiplier=ph_multiplier,
+                active_mode_duration=active_mode_duration) for _ in range(num_ants)]
 
     # Testing dot list for "8:30"
     dot_list = get_dots_for_830()
@@ -68,12 +78,21 @@ def main():
     cnt=0
     while True:
         cnt+=1
+        # if needed to update critical points
+        current_time = ImageProcessor.get_current_time()
+        if current_time != last_updated_time:
+            current_time_dots = ImageProcessor.convert_time_to_dots(current_time,height,width)
+            canvas.clear_critical_points()  # Clear previous critical points
+            for x, y in current_time_dots:
+                canvas.place_food_source(x, y)
+            last_updated_time = current_time
+
         # Move each ant and update the canvas
         for ant in ants:
             ant.move()
 
         canvas.evaporate_pheromones(evaporation_rate=0.1)  # Adjust evaporation rate as needed
-        if(cnt%300==0):
+        if(cnt%30==0):
             canvas.draw_canvas_all(ants)  # Implement the visualization logic
         # time.sleep(1)  # Update interval; adjust as needed for smoothness vs performance
 

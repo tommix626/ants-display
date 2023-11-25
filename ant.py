@@ -2,7 +2,7 @@ import random
 from collections import deque
 
 class Ant:
-    def __init__(self, x, y, canvas, memory_size=30, pheromone_deposit=1, active_pheromone_multiplier=5,active_mode_duration=50):
+    def __init__(self, x, y, canvas, memory_size=30, pheromone_deposit=1, active_pheromone_multiplier=5, active_mode_duration=50):
         self.x = x
         self.y = y
         self.canvas = canvas

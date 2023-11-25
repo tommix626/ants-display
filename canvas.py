@@ -41,17 +41,18 @@ class Canvas:
         plt.figure(figsize=(10, 10))
         plt.imshow(dense_grid, cmap='hot', interpolation='nearest')
 
-        # Optionally, mark the food sources
-        for x in range(self.width):
-            for y in range(self.height):
-                if dense_grid[x, y] == 1:  # Assuming 1 indicates a food source
-                    plt.scatter(y, x, c='blue', s=10)  # Mark with blue dot
+        # Mark the ants on the grid (adjust for the flipped y-coordinates)
+        ant_x, ant_y = zip(*[(ant.x, self.height - ant.y - 1) for ant in ants])
+        plt.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
 
-        plt.colorbar()  # Show pheromone intensity scale
+        # Mark the food sources with larger dots (adjust for the flipped y-coordinates)
+        for x, y in self.critical_points:
+            plt.scatter(y, self.height - x - 1, c='blue', s=50)
+        plt.scatter(2, 2, c='white', s=100)
+        plt.colorbar()
         plt.title("Ant Colony Canvas")
         plt.xlabel("X-axis")
         plt.ylabel("Y-axis")
-        plt.gca().invert_yaxis()  # Invert Y-axis to match grid orientation
         plt.show()
     def draw_canvas_all(self,ants):
         # Convert the sparse grid to a dense format for plotting
@@ -75,3 +76,6 @@ class Canvas:
         plt.ylabel("Y-axis")
         plt.gca().invert_yaxis()  # Invert Y-axis to match grid orientation
         plt.show()
+
+    def clear_critical_points(self):
+        self.critical_points.clear()  # Clear the set of critical points
