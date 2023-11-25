@@ -22,8 +22,8 @@ class ImageProcessor:
         }
         # Calculate scale and spacing based on width and height
         digit_height = 4  # Height of each digit pattern
-        digit_width = 3  # Width of each digit pattern
-        total_digits = 4  # 4 digits + 1 colon
+        digit_width = 5  # Width of each digit pattern
+        total_digits = len(time_str)  # 4 digits + 1 colon
 
         # Allow for some blank space on edges
         horizontal_margin = width // 10

@@ -32,7 +32,7 @@ class Canvas:
     def evaporate_pheromones(self, evaporation_rate):
         for x, y in self.updated_cells:
             current_level = self.grid.get_cell(x, y)
-            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate))
+            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate/2))
             new_level = max(new_level, 0)
             self.grid.update_cell(x, y, new_level)
         self.updated_cells.clear()
@@ -94,7 +94,7 @@ class Canvas:
             plt.colorbar(self.im, ax=self.ax)
         else:
             self.im.set_data(dense_grid)
-            self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
+            # self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
 
         # Mark the ants on the grid
         ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
@@ -103,7 +103,7 @@ class Canvas:
         else:
             self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
 
-        # # Mark the food sources with larger blue dots
+        # Mark the food sources with larger blue dots
         # food_x, food_y = zip(*self.critical_points)
         # if self.food_plot is None:
         #     self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=50)
