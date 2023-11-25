@@ -49,7 +49,7 @@ class Ant:
                     adjacent.append((new_x, new_y))
         return adjacent
 
-    def calculate_probabilities(self, cells, smoothing_factor=0.1):
+    def calculate_probabilities(self, cells, smoothing_factor=0):
         """Calculate the probabilities for each cell based on pheromone levels with smoothing."""
         pheromone_levels = [self.canvas.get_pheromone_level(*cell) for cell in cells]
 

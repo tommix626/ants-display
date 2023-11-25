@@ -3,7 +3,7 @@ class ImageProcessor:
     def convert_time_to_dots(time_str, width, height):
         # Define the basic pattern for each digit in a 5x3 grid (rows x columns)
         def scale_pattern(pattern, scale):
-            return [((digit_height-x) * scale, y * scale) for (x, y) in pattern]
+            return [((x) * scale, y * scale) for (x, y) in pattern]
 
         # Patterns for the digits and colon
         basic_patterns = {

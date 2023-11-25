@@ -9,6 +9,12 @@ class Canvas:
         self.height = height
         self.updated_cells = set()
         self.critical_points = set()
+        #ploting
+        self.fig, self.ax = plt.subplots(figsize=(10, 10))
+        self.im = None
+        self.ants_plot = None
+        self.food_plot = None
+        # self.ax.invert_yaxis()
 
     def place_food_source(self, x, y):
         self.grid.update_cell(x, y, 1)  # Assuming 1 indicates a food source
@@ -26,7 +32,8 @@ class Canvas:
     def evaporate_pheromones(self, evaporation_rate):
         for x, y in self.updated_cells:
             current_level = self.grid.get_cell(x, y)
-            new_level = max(current_level - evaporation_rate, 0)
+            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate))
+            new_level = max(new_level, 0)
             self.grid.update_cell(x, y, new_level)
         self.updated_cells.clear()
 
@@ -76,6 +83,38 @@ class Canvas:
         plt.ylabel("Y-axis")
         plt.gca().invert_yaxis()  # Invert Y-axis to match grid orientation
         plt.show()
+
+    def draw_canvas_update(self, ants):
+        # Convert the sparse grid to a dense format for plotting
+        dense_grid = self.grid.grid.toarray()
+
+        # Initialize or update the imshow plot
+        if self.im is None:
+            self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest') #self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest', vmin=0, vmax=dense_grid.max())
+            plt.colorbar(self.im, ax=self.ax)
+        else:
+            self.im.set_data(dense_grid)
+
+        # Mark the ants on the grid
+        ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
+        if self.ants_plot is None:
+            self.ants_plot = self.ax.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
+        else:
+            self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
+
+        # Mark the food sources with larger blue dots
+        food_x, food_y = zip(*self.critical_points)
+        if self.food_plot is None:
+            self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=50)
+        else:
+            self.food_plot.set_offsets(np.c_[food_y, food_x])
+
+        # Update the plot
+        self.ax.set_title("Ant Colony Canvas")
+        self.ax.set_xlabel("X-axis")
+        self.ax.set_ylabel("Y-axis")
+        plt.draw()
+        plt.pause(0.001)  # Pause to allow the plot to update
 
     def clear_critical_points(self):
         self.critical_points.clear()  # Clear the set of critical points

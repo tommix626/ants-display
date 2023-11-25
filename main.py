@@ -57,10 +57,11 @@ def get_dots_for_830(scale=4, spacing=2):
 def main():
     """core param"""
     width, height = 40, 100  # Set the size of your canvas
-    num_ants = 200  # Number of ants
-    ant_memory_size = 50
-    ph_deposit, ph_multiplier = 1, 50
-    active_mode_duration = 500
+    num_ants = 20  # Number of ants
+    ant_memory_size = 20
+    ph_deposit, ph_multiplier = 1, 10
+    active_mode_duration = 50
+    ph_evaporate_rate = 0.3
 
     """main"""
     last_updated_time = None
@@ -91,9 +92,9 @@ def main():
         for ant in ants:
             ant.move()
 
-        canvas.evaporate_pheromones(evaporation_rate=0.1)  # Adjust evaporation rate as needed
-        if(cnt%30==0):
-            canvas.draw_canvas_all(ants)  # Implement the visualization logic
+        canvas.evaporate_pheromones(evaporation_rate=ph_evaporate_rate)  # Adjust evaporation rate as needed
+        if(cnt%300 ==0):
+            canvas.draw_canvas_update(ants)  # Implement the visualization logic
         # time.sleep(1)  # Update interval; adjust as needed for smoothness vs performance
 
 if __name__ == "__main__":
