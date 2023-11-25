@@ -1,3 +1,4 @@
+from image_processor import ImageProcessor
 from sparse_grid import SparseGrid
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,7 +18,7 @@ class Canvas:
         # self.ax.invert_yaxis()
 
     def place_food_source(self, x, y):
-        self.grid.update_cell(x, y, 1)  # Assuming 1 indicates a food source
+        # self.grid.update_cell(x, y, 1)  # Assuming 1 indicates a food source
         self.critical_points.add((x, y))
 
     def remove_food_source(self, x, y):
@@ -32,7 +33,7 @@ class Canvas:
     def evaporate_pheromones(self, evaporation_rate):
         for x, y in self.updated_cells:
             current_level = self.grid.get_cell(x, y)
-            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate/2))
+            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate/1.5))
             new_level = max(new_level, 0)
             self.grid.update_cell(x, y, new_level)
         self.updated_cells.clear()
@@ -91,10 +92,10 @@ class Canvas:
         # Initialize or update the imshow plot
         if self.im is None:
             self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest', vmin=0, vmax=dense_grid.max())
-            plt.colorbar(self.im, ax=self.ax)
+            # plt.colorbar(self.im, ax=self.ax)
         else:
             self.im.set_data(dense_grid)
-            # self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
+            self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
 
         # Mark the ants on the grid
         ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
@@ -112,10 +113,10 @@ class Canvas:
 
         # Update the plot
         self.ax.set_title("Ant Colony Canvas")
-        self.ax.set_xlabel("X-axis")
+        self.ax.set_xlabel(ImageProcessor.get_current_time())
         self.ax.set_ylabel("Y-axis")
         plt.draw()
-        plt.pause(0.001)  # Pause to allow the plot to update
+        plt.pause(0.00001)  # Pause to allow the plot to update
 
     def clear_critical_points(self):
         self.critical_points.clear()  # Clear the set of critical points

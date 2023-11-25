@@ -31,14 +31,14 @@ class ImageProcessor:
 
         available_width = width - 2 * horizontal_margin
         available_height = height - 2 * vertical_margin
-        print(available_height)
-        print(available_width)
+        # print(available_height)
+        # print(available_width)
         # Determine the scale for the patterns
         scale_x = int(available_height / digit_height)
         scale_y = int(available_width / (total_digits * digit_width))
 
         scale = min(scale_x, scale_y)
-        print(scale_x,scale_y)
+        # print(scale_x,scale_y)
         # Function to position digit patterns
         def position_pattern(pattern, offset_x, offset_y):
             return [(x + offset_x, y + offset_y) for x, y in pattern]
@@ -61,5 +61,5 @@ class ImageProcessor:
     @staticmethod
     def get_current_time():
         from datetime import datetime
-        current_time = datetime.now().strftime("%H:%M")
+        current_time = datetime.now().strftime("%H:%M:%S")
         return current_time
