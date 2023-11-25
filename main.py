@@ -10,11 +10,11 @@ def main():
     """core param"""
     area_scale = 4
     width, height = 20 * area_scale, 100 * area_scale  # Set the size of your canvas
-    num_ants = 10 * area_scale * 2 # Number of ants
+    num_ants = 10 * area_scale * 4 # Number of ants
     ant_memory_size = 17 * area_scale
-    ph_deposit, ph_multiplier = 0.001, 340
+    ph_deposit, ph_multiplier = 0.001, 600
     active_mode_duration = 6.5 * area_scale
-    lin_evap_rate, exp_evap_rate = 0.1, 0.9
+    lin_evap_rate, exp_evap_rate = 0.1, 0.8
 
     """main"""
     last_updated_time = None
@@ -41,7 +41,7 @@ def main():
             ant.move()
 
         canvas.evaporate_pheromones(lin_evap_rate, exp_evap_rate)  # Adjust evaporation rate as needed
-        if( cnt% 2 ==0):
+        if( cnt% 3 ==0):
             canvas.draw_canvas_update(ants)  # Implement the visualization logic
         # time.sleep(1)  # Update interval; adjust as needed for smoothness vs performance
 
