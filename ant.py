@@ -49,7 +49,17 @@ class Ant:
                     adjacent.append((new_x, new_y))
         return adjacent
 
+    def calculate_probabilities(self, cells, smoothing_factor=0.01):
+        """Calculate the probabilities for each cell based on pheromone levels with smoothing."""
+        pheromone_levels = [self.canvas.get_pheromone_level(*cell) for cell in cells]
 
+        # Apply smoothing to pheromone levels
+        smoothed_levels = [level + smoothing_factor for level in pheromone_levels]
+        total_pheromone = sum(smoothed_levels)
+
+        # Calculate probabilities with smoothing applied
+        probabilities = [level / total_pheromone for level in smoothed_levels]
+        return probabilities
     def choose_next_cell(self, cells, probabilities):
         """Choose the next cell based on calculated probabilities."""
         return random.choices(cells, weights=probabilities, k=1)[0]
@@ -68,7 +78,12 @@ class Ant:
         deposit_amount = self.pheromone_deposit
         if self.active_mode:
             deposit_amount *= self.active_pheromone_multiplier
+            # # TEST:peripheral deposit a little (guass bluring)
+            # adjacent_cells = self.get_adjacent_cells()
+            # for pos in adjacent_cells:
+            #     self.canvas.update_pheromone_level(*pos, deposit_amount // 10)
         self.canvas.update_pheromone_level(self.x, self.y, deposit_amount)
+
 
     def detect_critical_point(self):
         # This method will check if the ant's current position is a critical point

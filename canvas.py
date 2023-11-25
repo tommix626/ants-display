@@ -30,10 +30,10 @@ class Canvas:
         self.grid.update_cell(x, y, current_level + amount)
         self.updated_cells.add((x, y))
 
-    def evaporate_pheromones(self, evaporation_rate):
+    def evaporate_pheromones(self, lin_evap_rate, exp_evap_rate):
         for x, y in self.updated_cells:
             current_level = self.grid.get_cell(x, y)
-            new_level = min(current_level - evaporation_rate, current_level * (1-evaporation_rate/1.5))
+            new_level = min(current_level - lin_evap_rate, current_level * (exp_evap_rate))
             new_level = max(new_level, 0)
             self.grid.update_cell(x, y, new_level)
         self.updated_cells.clear()
@@ -92,22 +92,22 @@ class Canvas:
         # Initialize or update the imshow plot
         if self.im is None:
             self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest', vmin=0, vmax=dense_grid.max())
-            # plt.colorbar(self.im, ax=self.ax)
+            plt.colorbar(self.im, ax=self.ax)
         else:
             self.im.set_data(dense_grid)
             self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
 
-        # Mark the ants on the grid
-        ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
-        if self.ants_plot is None:
-            self.ants_plot = self.ax.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
-        else:
-            self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
+        # # Mark the ants on the grid
+        # ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
+        # if self.ants_plot is None:
+        #     self.ants_plot = self.ax.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
+        # else:
+        #     self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
 
-        # Mark the food sources with larger blue dots
+        # # Mark the food sources with larger blue dots
         # food_x, food_y = zip(*self.critical_points)
         # if self.food_plot is None:
-        #     self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=50)
+        #     self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=5)
         # else:
         #     self.food_plot.set_offsets(np.c_[food_y, food_x])
 
