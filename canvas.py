@@ -92,18 +92,18 @@ class Canvas:
         # Initialize or update the imshow plot
         if self.im is None:
             self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest', vmin=0, vmax=dense_grid.max())
-            plt.colorbar(self.im, ax=self.ax)
+            # plt.colorbar(self.im, ax=self.ax)
         else:
             self.im.set_data(dense_grid)
             self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
             # self.im.set_clim(vmin=0, vmax=200)  # Adjust color limits if necessary
 
-        # Mark the ants on the grid
-        ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
-        if self.ants_plot is None:
-            self.ants_plot = self.ax.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
-        else:
-            self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
+        # # Mark the ants on the grid
+        # ant_x, ant_y = zip(*[(ant.x, ant.y) for ant in ants])
+        # if self.ants_plot is None:
+        #     self.ants_plot = self.ax.scatter(ant_y, ant_x, c='white', alpha=0.6, s=20)
+        # else:
+        #     self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
 
         # # Mark the food sources with larger blue dots
         # food_x, food_y = zip(*self.critical_points)
