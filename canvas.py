@@ -3,6 +3,8 @@ from sparse_grid import SparseGrid
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+
 class Canvas:
     def __init__(self, width, height):
         self.grid = SparseGrid(width, height)
@@ -12,10 +14,32 @@ class Canvas:
         self.critical_points = set()
         #ploting
         self.fig, self.ax = plt.subplots(figsize=(10,3))
+        self.fig.canvas.mpl_connect('button_press_event', self.user_on_click) # connect onclick for interaction
         self.im = None
         self.ants_plot = None
         self.food_plot = None
         # self.ax.invert_yaxis()
+    def user_on_click(self, event):
+        if event.xdata is not None and event.ydata is not None:
+            x, y = int(event.xdata), int(event.ydata)
+
+            if event.button == 1:  # Left click
+                print(f'Clearing pheromones at x={x}, y={y}')
+                self.modify_pheromone_vicinity(y, x, clear=True)
+
+            elif event.button == 3:  # Right click
+                print(f'Boosting pheromones at x={x}, y={y}')
+                self.modify_pheromone_vicinity(y, x, boost=True)
+
+    def modify_pheromone_vicinity(self, x, y, radius=5, clear=False, boost=False, boost_amount=1):
+        # Adjust the radius, clear and boost settings as needed
+        for i in range(x - radius, x + radius + 1):
+            for j in range(y - radius, y + radius + 1):
+                if 0 <= i < self.width and 0 <= j < self.height:
+                    if clear:
+                        self.update_pheromone_level(i, j, -self.get_pheromone_level(i, j))  # Clear pheromone
+                    elif boost:
+                        self.update_pheromone_level(i, j, boost_amount)  # Boost pheromone
 
     def place_food_source(self, x, y):
         # self.grid.update_cell(x, y, 1)  # Assuming 1 indicates a food source
@@ -92,7 +116,7 @@ class Canvas:
         # Initialize or update the imshow plot
         if self.im is None:
             self.im = self.ax.imshow(dense_grid, cmap='hot', interpolation='nearest', vmin=0, vmax=dense_grid.max())
-            # plt.colorbar(self.im, ax=self.ax)
+            plt.colorbar(self.im, ax=self.ax)
         else:
             self.im.set_data(dense_grid)
             self.im.set_clim(vmin=0, vmax=dense_grid.max())  # Adjust color limits if necessary
