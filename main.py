@@ -93,7 +93,7 @@ def main():
             ant.move()
 
         canvas.evaporate_pheromones(evaporation_rate=ph_evaporate_rate)  # Adjust evaporation rate as needed
-        if(cnt%300 ==0):
+        if(cnt%3 ==0):
             canvas.draw_canvas_update(ants)  # Implement the visualization logic
         # time.sleep(1)  # Update interval; adjust as needed for smoothness vs performance
 
