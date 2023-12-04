@@ -24,12 +24,17 @@ class Canvas:
             x, y = int(event.xdata), int(event.ydata)
 
             if event.button == 1:  # Left click
-                print(f'Clearing pheromones at x={x}, y={y}')
-                self.modify_pheromone_vicinity(y, x, clear=True)
+                print(f'adding critical point at x={x}, y={y}')
+                self.place_food_source(y, x)
 
             elif event.button == 3:  # Right click
-                print(f'Boosting pheromones at x={x}, y={y}')
-                self.modify_pheromone_vicinity(y, x, boost=True)
+                radius = 5
+                print(f'Removing critical point around x={x}, y={y}, with radius={radius}')
+                for i in range(x - radius, x + radius + 1):
+                    for j in range(y - radius, y + radius + 1):
+                        if 0 <= j < self.width and 0 <= i < self.height:
+                            # print(f"attempt to remove at {i},{j}, {self.height}, {self.width}")
+                            self.remove_food_source(j, i)
 
     def modify_pheromone_vicinity(self, x, y, radius=5, clear=False, boost=False, boost_amount=1):
         # Adjust the radius, clear and boost settings as needed
@@ -46,7 +51,8 @@ class Canvas:
         self.critical_points.add((x, y))
 
     def remove_food_source(self, x, y):
-        self.grid.update_cell(x, y, 0)
+        # print(f"attempt to remove at {x},{y}")
+        # self.grid.update_cell(x, y, 0)
         self.critical_points.discard((x, y))
 
     def update_pheromone_level(self, x, y, amount):
@@ -130,11 +136,12 @@ class Canvas:
         #     self.ants_plot.set_offsets(np.c_[ant_y, ant_x])
 
         # # Mark the food sources with larger blue dots
-        # food_x, food_y = zip(*self.critical_points)
-        # if self.food_plot is None:
-        #     self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=5)
-        # else:
-        #     self.food_plot.set_offsets(np.c_[food_y, food_x])
+        # if self.critical_points:
+        #     food_x, food_y = zip(*self.critical_points)
+        #     if self.food_plot is None:
+        #         self.food_plot = self.ax.scatter(food_y, food_x, c='blue', s=5)
+        #     else:
+        #         self.food_plot.set_offsets(np.c_[food_y, food_x])
 
         # Update the plot
         self.ax.set_title("Ant Clock")
