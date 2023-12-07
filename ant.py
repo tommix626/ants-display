@@ -56,12 +56,15 @@ class Ant:
         # Apply smoothing to pheromone levels
         smoothed_levels = [level + smoothing_factor for level in pheromone_levels]
         total_pheromone = sum(smoothed_levels)
-
+        if(total_pheromone==0):
+            return smoothed_levels
         # Calculate probabilities with smoothing applied
         probabilities = [level / total_pheromone for level in smoothed_levels]
         return probabilities
     def choose_next_cell(self, cells, probabilities):
         """Choose the next cell based on calculated probabilities."""
+        if sum(probabilities) == 0:
+            return cells[0]
         return random.choices(cells, weights=probabilities, k=1)[0]
 
     def update_position(self, x, y):
